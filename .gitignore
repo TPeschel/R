@@ -33,6 +33,7 @@ vignettes/*.pdf
 *.knit.md
 
 */data
-*/email
-*/docs
+*/results
 */original
+*/email
+
