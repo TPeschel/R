@@ -19,20 +19,21 @@ source( "~/connection/connection.r" )
 source( "~/LIFE/myPostGraduates/ThomasBerger/r/TP/wd.stack.R" )
 
 ## day of computation
-today <- gsub( x = Sys.Date( ), pattern = "-", replacement = "" )
+#today <- gsub( x = Sys.Date( ), pattern = "-", replacement = "" )
+today <- "20170328"
 
 ## push the current working directory on the stack
 push( )
 
 ## set the new working directory to ~/LIFE/myPostGraduates/ThomasBerger/r/TP/
-setwd( "~/LIFE/myPostGraduates/ThomasBerger/r/TP/" )
+setwd( "~/LIFE/github-tpeschel/R/ThomasBerger/r/" )
 
 ## evaluation part 1
 ## using Box-Cox-Cole-Green distribution for
 ## SPRECH_F0_1..3
 ## using normal distribution for
 ## SPRECH_F0_4
-source( "evaluation_part1_sprech_123_bccg_4_norm_distributed_with_gamlls.R" )
+#source( "evaluation_part1_sprech_123_bccg_4_norm_distributed_with_gamlls.R" )
 
 
 ## evaluation part 1
@@ -40,6 +41,6 @@ source( "evaluation_part1_sprech_123_bccg_4_norm_distributed_with_gamlls.R" )
 ## SPRECH_F0_1..3
 ## using normal distribution for
 ## SPRECH_F0_4
-source( "evaluation_part2_sprech_123_bccg_4_norm_distributed_with_gamlls.R" )
+source( "evaluation_part2_sprech_123bccg_4norm_distributed_with_gamlls.R" )
 
 pop( )

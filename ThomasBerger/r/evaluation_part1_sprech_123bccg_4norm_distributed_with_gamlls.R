@@ -2,7 +2,7 @@
 push( )
 
 ## change working dir to data/results
-setwd( "~/LIFE/myPostGraduates/ThomasBerger/data/results/" )
+setwd( "~/LIFE/github-tpeschel/R/ThomasBerger/results/" )
 
 ## metadata of all "Aufklärungsgespräche" (A2) 
 d88 <- get.data( ldb, "D00088" )

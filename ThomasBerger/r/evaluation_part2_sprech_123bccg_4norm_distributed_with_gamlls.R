@@ -1,8 +1,6 @@
 push( )
 
-setwd( "~/LIFE/myPostGraduates/ThomasBerger/data/results" )
-
-today <- "20170328"
+setwd( "~/LIFE/github-tpeschel/R/ThomasBerger/results/" )
 
 mytheme <- theme( 
     legend.position = "none", 
@@ -75,7 +73,7 @@ for( mg in params ) {
     
     age.points <- nrow( res.boys[[ 1 ]] )
 
-        print( n.iter )
+    print( n.iter )
     
     res.boys <- Reduce( rbind, res.boys )
     res.boys$which <- rep( 1 : n.iter, each = age.points )
