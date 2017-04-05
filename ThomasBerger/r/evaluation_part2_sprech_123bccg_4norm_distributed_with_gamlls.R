@@ -31,7 +31,7 @@ params <- c( 1 : 3 )
 
 for( mg in params ) {
 
-    load( paste0( "LMS_F0_SPRECH_", mg, "_", today, ".Rda" ) )
+    load( paste0( "LMS_F0_SPRECH_", mg, "_", date.today, ".Rda" ) )
     
     names( res.girls ) <- 1 : length( res.girls )
     names( res.boys )  <- 1 : length( res.boys )
@@ -125,8 +125,8 @@ for( mg in params ) {
         as.data.frame( perc.sum.boys ),
         id.vars = c( "age", "mean.mu", "mean.sigma", "mean.nu", "sd.mu", "sd.sigma", "sd.nu" ) )
     
-    save( perc.sum.girls, file = paste0( "LMS_4GFX_F0_SPRECH_FEMALE_", mg, "_", today, ".Rda" ) )
-    save( perc.sum.boys,  file = paste0( "LMS_4GFX_F0_SPRECH_MALE_", mg, "_", today, ".Rda" ) )
+    save( perc.sum.girls, file = paste0( "LMS_4GFX_F0_SPRECH_FEMALE_", mg, "_", date.today, ".Rda" ) )
+    save( perc.sum.boys,  file = paste0( "LMS_4GFX_F0_SPRECH_MALE_", mg, "_", date.today, ".Rda" ) )
     
         
     labelsdf.g <- perc.sum.girls[ which( max( perc.sum.girls$age ) == perc.sum.girls$age ), c( "variable", "value" ) ]
@@ -167,9 +167,9 @@ for( mg in params ) {
         labs( title = paste0( "speaking voice - level ", mg, " (", spr.descr[ mg ], ") - female" ), x = "age [y]", y = "frequency [Hz]" ) +
         annotate(
             "text",
-            x=18.2,
-            y=labelsdf.g$value,
-            label=paste0("P[",labelsdf.g$label,"]"),
+            x = 18.2,
+            y = labelsdf.g$value,
+            label = paste0("P[",labelsdf.g$label,"]"),
             colour = "black",
             inherit.aes = T, 
             parse = T, 
@@ -177,7 +177,7 @@ for( mg in params ) {
             hjust = 0.5 ) +
             theme_bw( ) + mytheme
 
-    ggsave( paste0( "PLOT_F0_SPRECH_", mg, "_FEMALE_bw_", today, ".png" ) )    
+    ggsave( paste0( "PLOT_F0_SPRECH_", mg, "_FEMALE_bw_", date.today, ".png" ) )    
 
     ggplot( 
         perc.single.boys,
@@ -204,9 +204,9 @@ for( mg in params ) {
         labs( title = paste0( "speaking voice - level ", mg, " (", spr.descr[ mg ], ") - male" ), x = "age [y]", y = "frequency [Hz]" ) +
         annotate(
             "text",
-            x=18.2,
-            y=labelsdf.b$value,
-            label=paste0("P[",labelsdf.b$label,"]"),
+            x = 18.2,
+            y = labelsdf.b$value,
+            label = paste0("P[",labelsdf.b$label,"]"),
             colour = "black",
             inherit.aes = T, 
             parse = T, 
@@ -214,11 +214,12 @@ for( mg in params ) {
             hjust = 0.5 ) +
             theme_bw( ) + mytheme
 
-        ggsave( paste0( "PLOT_F0_SPRECH_", mg, "_MALE_bw_", today, ".png" ) )
+        ggsave( paste0( "PLOT_F0_SPRECH_", mg, "_MALE_bw_", date.today, ".png" ) )
 }
 
 mg <- 4
-load( paste0( "LMS_F0_SPRECH_", mg, "_", today, ".Rda" ) )
+
+load( paste0( "LMS_F0_SPRECH_", mg, "_", date.today, ".Rda" ) )
 
 res.girls <- lapply( 
     res.girls,
@@ -303,8 +304,8 @@ perc.sum.boys  <- melt(
   as.data.frame( perc.sum.boys ),
   id.vars = c( "age", "mean.mu", "mean.sigma", "sd.mu", "sd.sigma" ) )
 
-save( perc.sum.girls, file = paste0( "LMS_4GFX_F0_SPRECH_FEMALE_", mg, "_", today, ".Rda" ) )
-save( perc.sum.boys,  file = paste0( "LMS_4GFX_F0_SPRECH_MALE_", mg, "_", today, ".Rda" ) )
+save( perc.sum.girls, file = paste0( "LMS_4GFX_F0_SPRECH_FEMALE_", mg, "_", date.today, ".Rda" ) )
+save( perc.sum.boys,  file = paste0( "LMS_4GFX_F0_SPRECH_MALE_", mg, "_", date.today, ".Rda" ) )
 
 
 labelsdf.g <- perc.sum.girls[ which( max( perc.sum.girls$age ) == perc.sum.girls$age ), c( "variable", "value" ) ]
@@ -342,9 +343,9 @@ ggplot(
     labs( title = "speaking voice - level 4 (shouting out) - female", x = "age [y]", y = "frequency [Hz]" ) +
     annotate(
         "text",
-        x=18.2,
-        y=labelsdf.g$value,
-        label=paste0("P[",labelsdf.g$label,"]"),
+        x = 18.2,
+        y = labelsdf.g$value,
+        label = paste0("P[",labelsdf.g$label,"]"),
         colour = "black",
         inherit.aes = T, 
         parse = T, 
@@ -352,7 +353,7 @@ ggplot(
         hjust = 0.5 ) +
     theme_bw( ) + mytheme
 
-ggsave( paste0( "PLOT_F0_SPRECH_", mg, "_FEMALE_bw_", today, ".png" ) )
+ggsave( paste0( "PLOT_F0_SPRECH_", mg, "_FEMALE_bw_", date.today, ".png" ) )
 
 ggplot(
     perc.single.boys,
@@ -377,9 +378,9 @@ geom_line(
     labs( title = "speaking voice - level 4 (shouting out) - male", x = "age [y]", y = "frequency [Hz]" ) +
     annotate(
         "text",
-        x=18.2,
-        y=labelsdf.b$value,
-        label=paste0("P[",labelsdf.b$label,"]"),
+        x = 18.2,
+        y = labelsdf.b$value,
+        label = paste0("P[",labelsdf.b$label,"]"),
         colour = "black",
         inherit.aes = T, 
         parse = T,
@@ -387,6 +388,6 @@ geom_line(
         hjust = 0.5 ) +
     theme_bw( ) + mytheme
 
-ggsave( paste0( "PLOT_F0_SPRECH_", mg, "_MALE_bw_", today, ".png" ) )
+ggsave( paste0( "PLOT_F0_SPRECH_", mg, "_MALE_bw_", date.today, ".png" ) )
         
 pop( )

@@ -26,7 +26,7 @@ t865 <- t865[ 5.5 < t865$age & t865$age < 18, ]
 d192 <- get.data( ldb, "D00192", remove.D.name = T )
 d192 <- unique( d192[, c( "SIC","FAMILY_ID" ) ] )
 
-## get all sic of t865 which have no family id 
+## get all sics of t865 which have no family id 
 u.sics <- unique( t865$SIC[ !t865$SIC %in% d192$SIC ] )
 
 ## create family ids for remaining sics
@@ -163,13 +163,19 @@ for( mg in params ) {
         }
     }
     
-    save( res.boys, res.girls, file = paste0( "LMS_F0_SPRECH_", mg, "_", today, ".Rda" ) )
-    save( mod.boys, mod.girls, file = paste0( "MOD_F0_SPRECH_", mg, "_", today, ".Rda" ) )
+    save( res.boys, res.girls, file = paste0( "LMS_F0_SPRECH_", mg, "_", date.today, ".Rda" ) )
+    save( mod.boys, mod.girls, file = paste0( "MOD_F0_SPRECH_", mg, "_", date.today, ".Rda" ) )
 }
 
 mg <- 4
+
 col.name.stimme.f0.sprech <- paste0( "Stimme.F0_SPRECH_", mg )
-    
+
+data_boys  <- na.omit( t865[ t865$sex == "male",   c( col.name.stimme.f0.sprech, "age","sex", "FAMILY_ID" ) ] )
+data_girls <- na.omit( t865[ t865$sex == "female", c( col.name.stimme.f0.sprech, "age","sex", "FAMILY_ID" ) ] )
+  
+names( data_boys ) <- names( data_girls ) <- c( "value","age","sex","FAMILY_ID" )
+
 res.boys <- list( )
 res.girls <- list( )
 mod.boys <- list( )
@@ -268,7 +274,7 @@ for( i in 1 : 1500 ) {
     }
 }
 
-save( res.boys, res.girls, file = paste0( "LMS_F0_SPRECH_", mg, "_", today, ".Rda" ) )
-save( mod.boys, mod.girls, file = paste0( "MOD_F0_SPRECH_", mg, "_", today, ".Rda" ) )
+save( res.boys, res.girls, file = paste0( "LMS_F0_SPRECH_", mg, "_", date.today, ".Rda" ) )
+save( mod.boys, mod.girls, file = paste0( "MOD_F0_SPRECH_", mg, "_", date.today, ".Rda" ) )
 
 pop( )
