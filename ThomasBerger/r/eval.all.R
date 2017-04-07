@@ -35,7 +35,7 @@ setwd( "~/LIFE/github-tpeschel/R/ThomasBerger/r/" )
 ## SPRECH_F0_4
 source( "evaluation_part1_sprech_123bccg_4norm_distributed_with_gamlls.R" )
 
-## evaluation part 1
+## evaluation part 2
 ## using Box-Cox-Cole-Green distribution for
 ## SPRECH_F0_1..3
 ## using normal distribution for

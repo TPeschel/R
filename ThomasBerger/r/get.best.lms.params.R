@@ -1,6 +1,6 @@
 setwd( "~/LIFE/myPostGraduates/ThomasBerger/r/TP/" )
 
-load( "../../data/voice_clean.Rda")
+#load( "../../data/voice_clean.Rda")
 
 require( xlsx )
 
@@ -42,9 +42,9 @@ d192 <- rbind( d192, d192.b )
 
 t865 <- merge( t865, d192, by = c( "SIC" ), all.x = T )
 
-sp.lvl     <- data.frame( sp.lvl   = seq( 1, 5 ) )
+sp.lvl     <- data.frame( sp.lvl   = seq( 1, 4 ) )
 sex        <- data.frame( sex      = c( "male", "female" ) )
-family     <- data.frame( family   = c( "BCCG", "BCTO" ) )
+family     <- data.frame( family   = c( "BCCG", "BCTO", "NO" ) )
 mu.df      <- data.frame( mu.df    = c( 1 : 6 ) )
 sig.df     <- data.frame( sig.df   = c( 0 : 2 ) )
 nu.df      <- data.frame( nu.df    = c( 0 : 2 ) )
@@ -61,9 +61,9 @@ for( p in c( 1 : nrow( lms.params ) ) ) {
     print( p )
     print( lms.params[ p, ] )
 
-    dat  <- na.omit( t865[ t865$sex == lms.params$sex[ p ], c( paste0( "Dat_Sing.F0_SPRECH_", lms.params$sp.lvl[ p ] ), "age","sex", "FAMILY_ID" ) ] )
+    dat  <- na.omit( t865[ t865$sex == lms.params$sex[ p ], c( paste0( "Dat_Sing.SPL_SPRECH_", lms.params$sp.lvl[ p ] ), "age", "sex", "FAMILY_ID" ) ] )
 
-    names( dat ) <- c( "value","age","sex","FAMILY_ID" )
+    names( dat ) <- c( "value", "age", "sex", "FAMILY_ID" )
     
     res <- list( )
 
@@ -108,17 +108,7 @@ for( p in c( 1 : nrow( lms.params ) ) ) {
 
         age <- seq( 6, 18, by = 1 / 12 )
         
-        if( mm$family[ 1 ] == "BCCG" & !( "try-error" %in% class( tr.obj ) ) ) {
-
-            lms.d <- as.data.frame(
-                predictAll(
-                    mm,
-                    newdata = data.frame( age = age )
-                )
-            )
-
-            lms.d$age <- age
-            res[[ length( res ) + 1 ]] <- lms.d
+        if( ( mm$family[ 1 ] == "BCCG" | mm$family[ 1 ] == "BCTO" ) & !( "try-error" %in% class( tr.obj ) ) ) {
             
             lms.params$succ[ p ] <- lms.params$succ[ p ] + 1
         }
@@ -129,13 +119,10 @@ for( p in c( 1 : nrow( lms.params ) ) ) {
             
             break;
         }
-        ##save( res.boys, res.girls, file = paste0( "LMS_", mg, ".Rda" ) )
-        ##save( res.girls, file = paste0( "LMS_girls", mg, ".Rda" ) )
-        ##save( res.boys, file = paste0( "LMS_boys", mg, ".Rda" ) )
     }
 }
 
 #save( lms.params, file = paste0( "LMS_Params", mg, ".Rda" ) )
-write.xlsx( lms.params, file = "LMS_Params_2017_02_24.xls" )
+write.xlsx( lms.params, file = "LMS_Params_SPL_SPRECH_20170406.xls" )
 
 

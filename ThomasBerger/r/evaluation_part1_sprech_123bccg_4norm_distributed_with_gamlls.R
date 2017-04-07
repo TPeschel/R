@@ -1,14 +1,13 @@
 ## current working dir to stack
 push( )
 
+#load( "~/LIFE/github-tpeschel/R/ThomasBerger/original/Stimme/Stimme-Dateien/save/voice_clean.Rda" )
+
 ## change working dir to data/results
 setwd( "~/LIFE/github-tpeschel/R/ThomasBerger/results/" )
 
 ## metadata of all "Aufklärungsgespräche" (A2) 
 d88 <- get.data( ldb, "D00088" )
-
-## equivalent to "Aufklaerungsgespraeche"
-d171 <- get.data( ldb, "D00171", remove.D.name = T )
 
 ## personal data
 persdat <- get.persdat( ldb )
@@ -23,22 +22,31 @@ t865 <- add.persdat.age( persdat = persdat, t865 )
 t865 <- t865[ 5.5 < t865$age & t865$age < 18, ]
 
 ## families
-d192 <- get.data( ldb, "D00192", remove.D.name = T )
-d192 <- unique( d192[, c( "SIC","FAMILY_ID" ) ] )
+## SozDem
+d177 <- get.data( ldb, "D00177", remove.D.name = T )
+d177 <- unique( d177[, c( "SIC", "FAM_ID" ) ] )
 
-## get all sics of t865 which have no family id 
-u.sics <- unique( t865$SIC[ !t865$SIC %in% d192$SIC ] )
+## merge t865 and d177
+t865 <- merge( t865, d177, by = c( "SIC" ), all.x = T )
 
-## create family ids for remaining sics
-d192.b <- data.frame( SIC = u.sics, FAMILY_ID = 1 : length( u.sics ) )
+nrow( t865 )
 
-## bind them to the table with ordinary family ids
-d192 <- rbind( d192, d192.b )
+t865 <- t865[ !( is.na( t865$Stimme.F0_SPRECH_1 ) + is.na( t865$Stimme.F0_SPRECH_2 ) + is.na( t865$Stimme.F0_SPRECH_3 ) + is.na( t865$Stimme.F0_SPRECH_4 ) ), ]
 
-## merge t865 and d192
-t865 <- merge( t865, d192, by = c( "SIC" ), all.x = T )
+fltr <-
+t865 %>%
+    group_by( SIC ) %>%
+    mutate( visits = n( ) ) %>%
+    ungroup( ) %>%
+    group_by( FAM_ID, sex ) %>%
+    summarise( sic = SIC[ which.min( EDAT ) ], edat = min( EDAT ) )
 
-## age in months
+View( t865 )
+
+t865 <-
+    t865[ t865$SIC %in% fltr$sic & t865$EDAT %in% fltr$edat, ]
+
+## monthly age in years
 age <- seq( 6, 18, by = 1 / 12 )
 
 ## parameter = 1,2,3 
@@ -66,49 +74,49 @@ for( mg in params ) {
         print( i )
 
         weights <- 
-        group_by( data_boys, FAMILY_ID ) %>% 
-        summarise( 
-            n = n( ),
-            wgt = n / ( n + 1 ) )  #1-1/(n+1)
+            group_by( data_boys, FAMILY_ID ) %>% 
+            summarise( 
+                n = n( ),
+                wgt = n / ( n + 1 ) )  #1-1/(n+1)
     
         weights <-
-        weights[ sample( 1 : nrow( weights ), size = 450, prob = weights$wgt ), ]
+            weights[ sample( 1 : nrow( weights ), size = 450, prob = weights$wgt ), ]
         
         tmpdata_boys <-
-        data_boys[ data_boys$FAMILY_ID %in% weights$FAMILY_ID, ]
+            data_boys[ data_boys$FAMILY_ID %in% weights$FAMILY_ID, ]
         
         tmpdata_boys <-
-        tmpdata_boys %>%
-        group_by( FAMILY_ID ) %>%
-        sample_n( 1 )
+            tmpdata_boys %>%
+            group_by( FAMILY_ID ) %>%
+            sample_n( 1 )
         
-                print( "fitting boys" )
+        print( "fitting boys" )
 
         tr.obj1 <-
-        try(
-            mm_boys <- 
-            lms(
-                value,
-                age,
-                data = tmpdata_boys,
-                families = "BCCG",
-                method.pb = "ML",
-                k = 2,
-                trace = F,
-                sigma.df = 2,
-                mu.df = 4,
-                nu.df = 0 ) )
+            try(
+                mm_boys <-
+                    lms(
+                        value,
+                        age,
+                        data      = tmpdata_boys,
+                        families  = "BCCG",
+                        method.pb = "ML",
+                        k         = 2,
+                        trace     = F,
+                        sigma.df  = 2,
+                        mu.df     = 4,
+                        nu.df     = 0 ) )
 
         if( mm_boys$family != "NO" & !( "try-error" %in% class( tr.obj1 ) ) ) {
             
             lms.boys <-
-            as.data.frame(
-                predictAll(
-                    mm_boys,
-                    newdata = data.frame( age = age ) ) )
-            
+                as.data.frame(
+                    predictAll(
+                        mm_boys,
+                        newdata = data.frame( age = age ) 
+                    )
+                )
             lms.boys$age <- age
-            
             res.boys[[ length( res.boys ) + 1 ]] <- lms.boys
             mod.boys[[ length( mod.boys ) + 1 ]] <- mm_boys
         }
@@ -135,29 +143,31 @@ for( mg in params ) {
         print( "fitting girls" )
         
         tr.obj2 <-
-        try(
-            mm_girls <-
-            lms(
-                value, 
-                age, 
-                data = tmpdata_girls,
-                families = "BCCG",
-                method.pb = "ML",
-                k = 2,
-                trace = F,
-                sigma.df = 2,
-                mu.df = 1, 
-                nu.df = 0 ) )
+            try(
+                mm_girls <-
+                lms(
+                    value, 
+                    age, 
+                    data      = tmpdata_girls,
+                    families  = "BCCG",
+                    method.pb = "ML",
+                    k         = 2,
+                    trace     = F,
+                    sigma.df  = 2,
+                    mu.df     = 1, 
+                    nu.df     = 0
+                )
+            )
         
         if( mm_girls$family != "NO" & !( "try-error" %in% class( tr.obj2 ) ) ) {
             
             lms.girls <- as.data.frame(
                 predictAll(
                     mm_girls,
-                    newdata = data.frame( age = age ) ) )
-            
+                    newdata = data.frame( age = age ) 
+                )
+            )
             lms.girls$age <- age
-            
             res.girls[[ length( res.girls ) + 1 ]] <- lms.girls
             mod.girls[[ length( mod.girls ) + 1 ]] <- mm_girls
         }
@@ -171,8 +181,8 @@ mg <- 4
 
 col.name.stimme.f0.sprech <- paste0( "Stimme.F0_SPRECH_", mg )
 
-data_boys  <- na.omit( t865[ t865$sex == "male",   c( col.name.stimme.f0.sprech, "age","sex", "FAMILY_ID" ) ] )
-data_girls <- na.omit( t865[ t865$sex == "female", c( col.name.stimme.f0.sprech, "age","sex", "FAMILY_ID" ) ] )
+data_boys  <- na.omit( t865[ t865$sex == "male",   c( col.name.stimme.f0.sprech, "age", "sex", "FAMILY_ID" ) ] )
+data_girls <- na.omit( t865[ t865$sex == "female", c( col.name.stimme.f0.sprech, "age", "sex", "FAMILY_ID" ) ] )
   
 names( data_boys ) <- names( data_girls ) <- c( "value","age","sex","FAMILY_ID" )
 
@@ -252,12 +262,14 @@ for( i in 1 : 1500 ) {
     tr.obj2 <- try(
          mm_girls <- gamlss(
              value ~ pb( age, 2 ),
-             data = tmpdata_girls,
+             data          = tmpdata_girls,
              sigma.formula = ~poly( age, 2 ),
-             family = "NO",
-             method.pb = "ML",
-             k = 2,
-             trace = F ) )
+             family        = "NO",
+             method.pb     = "ML",
+             k             = 2,
+             trace         = F
+            )
+        )
 
     if( !( "try-error" %in% class( tr.obj2 ) ) ) { #mm_girls$family != "NO" & 
         
