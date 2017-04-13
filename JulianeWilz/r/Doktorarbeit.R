@@ -2,23 +2,53 @@ library(readxl)
 library(dplyr)
 library(ggplot2)
 library(GGally)
+
+setwd( "~/LIFE/github-tpeschel/R/JulianeWilz/data/old/jwilz_altdaten/")
+
 getwd()
+
 daten <- read_excel("FINAL CT 290416 gelöscht - sex.xlsx")
+
 names(daten) <- make.names(names(daten))
 
 
 daten <- daten[!is.na(daten$Alter.Jahre),]
 daten$ag <- factor(floor(daten$Alter.Jahre))
 daten$CT_VALUE[!is.na(daten$CT_VALUE) & daten$CT_VALUE > 100] <- NA
+daten$CT_VALUE_Z <- ( daten$CT_VALUE - mean( daten$CT_VALUE, na.rm = T ) ) / sd( daten$CT_VALUE, na.rm = T )
+daten$CALCIUM_VALUE_Z <- ( daten$CALCIUM_VALUE - mean( daten$CALCIUM_VALUE, na.rm = T ) ) / sd( daten$CALCIUM_VALUE, na.rm = T )
 
 
-ggplot(daten, aes(x = ag, y = CT_VALUE)) +
+ggplot( 
+    daten,
+    aes( CT_VALUE_Z ) ) +
+    geom_density( )
+
+ggplot( 
+    daten,
+    aes( CALCIUM_VALUE_Z, CT_VALUE_Z ) ) +
+    geom_point( ) +
+    geom_smooth( )
+
+ggplot( 
+    daten,
+    aes( CALCIUM_VALUE, log( CT_VALUE ), col = sex ) ) +
+    geom_point( ) +
+    geom_smooth( method = "lm" )
+
+mean( daten$CT_VALUE_Z )
+
+ggplot(daten, aes(x = ag, y = CT_VALUE_Z, fill = sex)) +
   geom_boxplot()
 
 ggplot(daten, aes(x = ag, y = CT_VALUE, fill = sex)) +
   geom_boxplot()
 
-ggpairs(daten[,c("CT_VALUE", "ALK_PHOSP_VALUE", "PHOSPHAT_VALUE", "CALCIUM_VALUE", "OSTEOCALCIN_VALUE")])
+ggpairs(
+    daten[,c("CT_VALUE_Z", "CALCIUM_VALUE_Z","sex")],
+    mapping = aes(colour = sex) )
+        
+
 ggpairs(daten[,c("CT_VALUE", "BETA_CTX_VALUE", "PTH_VALUE", "P1NP_VALUE")])
 
 ggpairs(daten[between(daten$Alter.Jahre,0,2),c("CT_VALUE", "VDBP_VALUE", "IGF1_VALUE", "X125VITD_VALUE", "X25VITD_VALUE","sex")],

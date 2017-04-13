@@ -9,7 +9,7 @@ library( GGally )
 library( Hmisc )
 
 
-daten <- read_excel("../data/FINAL_CT.xlsx")
+daten <- read_excel("~/LIFE/github-tpeschel/R/JulianeWilz/data/old/FINAL_CT.xlsx")
 names(daten) <- make.names(names(daten))
 
 
