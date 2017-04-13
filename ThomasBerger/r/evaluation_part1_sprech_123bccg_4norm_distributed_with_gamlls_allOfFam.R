@@ -35,23 +35,6 @@ t865 <- t865[ !( is.na( t865$Stimme.F0_SPRECH_1 ) + is.na( t865$Stimme.F0_SPRECH
 
 nrow( t865 )
 
-t865.one.per.fam <-  
-t865 %>%
-    group_by( FAM_ID, sex ) %>%
-    summarise( 
-        n   = n( ), 
-        sel = floor( runif( 1, min = 1, max = n + 1 ) ), 
-        sic = SIC[ sel ],
-        sgroup = SGROUP[ sel ],
-        age = age[ sel ],
-        f01 = Stimme.F0_SPRECH_1[ sel ], 
-        f02 = Stimme.F0_SPRECH_2[ sel ],
-        f03 = Stimme.F0_SPRECH_3[ sel ],
-        f04 = Stimme.F0_SPRECH_4[ sel ] ) 
-
-
-table( floor( t865.one.per.fam$age + .5 ), t865.one.per.fam$sex )
-
 ## monthly age in years
 age <- seq( 6, 18, by = 1 / 12 )
 
@@ -63,8 +46,8 @@ for( mg in params ) {
 
     col.name.stimme.f0.sprech <- paste0( "f0", mg )
 
-    data_boys  <- na.omit( t865.one.per.fam[ t865.one.per.fam$sex == "male",   c( col.name.stimme.f0.sprech, "age","sex", "FAM_ID" ) ] )
-    data_girls <- na.omit( t865.one.per.fam[ t865.one.per.fam$sex == "female", c( col.name.stimme.f0.sprech, "age","sex", "FAM_ID" ) ] )
+    data_boys  <- na.omit( t865[ t865$sex == "male",   c( col.name.stimme.f0.sprech, "age","sex", "FAM_ID" ) ] )
+    data_girls <- na.omit( t865[ t865$sex == "female", c( col.name.stimme.f0.sprech, "age","sex", "FAM_ID" ) ] )
       
     names( data_boys ) <- names( data_girls ) <- c( "value","age","sex","FAM_ID" )
     
@@ -191,8 +174,8 @@ mg <- 4
 
 col.name.stimme.f0.sprech <- paste0( "f0", mg )
 
-data_boys  <- na.omit( t865.one.per.fam[ t865.one.per.fam$sex == "male",   c( col.name.stimme.f0.sprech, "age", "sex", "FAM_ID" ) ] )
-data_girls <- na.omit( t865.one.per.fam[ t865.one.per.fam$sex == "female", c( col.name.stimme.f0.sprech, "age", "sex", "FAM_ID" ) ] )
+data_boys  <- na.omit( t865[ t865$sex == "male",   c( col.name.stimme.f0.sprech, "age", "sex", "FAM_ID" ) ] )
+data_girls <- na.omit( t865[ t865$sex == "female", c( col.name.stimme.f0.sprech, "age", "sex", "FAM_ID" ) ] )
   
 names( data_boys ) <- names( data_girls ) <- c( "value","age","sex","FAM_ID" )
 

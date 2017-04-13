@@ -1,8 +1,15 @@
+warning = F
+
 source( "~/connection/connection.r" )
+library( directlabels )
 library( dplyr )
+library( gamlss )
+library( ggplot2 )
 library( lifecuration )
 library( lubridate )
-library( ggplot2 )
+library( readxl )
+library( reshape2 )
+library( svglite )
 
 setwd( "~/LIFE/github-tpeschel/R/ThomasBerger/results/" )
 
@@ -26,6 +33,7 @@ persdat     <- get.persdat( ldb )
 data.sprech <- get.data.with.aliases( ldb, "T00865", withTabAlias = F )
 data.sprech <- add.persdat.age( persdat, data.sprech )
 data.sprech <- filter( data.sprech, age < 18 )
+
 
 sds.normal <-
     function(
@@ -67,9 +75,9 @@ sds.bccg <-
                 lamda.col <- paste( item, sex[ i ], "l", sep = "." )
                 if( is.na( value[ i ] ) | is.na( age[ i ] ) | is.na( sex[ i ] ) )
                     return( NA )
-                m <- approx( ref$age, ref[ ,mu.col ],    xout = age[ i ], rule = 1 )$y
-                l <- approx( ref$age, ref[ ,lamda.col ], xout = age[ i ], rule = 1 )$y
-                s <- approx( ref$age, ref[ ,sigma.col ], xout = age[ i ], rule = 1 )$y
+                m <- approx( ref$age, ref[ , mu.col ],    xout = age[ i ], rule = 1 )$y
+                l <- approx( ref$age, ref[ , lamda.col ], xout = age[ i ], rule = 1 )$y
+                s <- approx( ref$age, ref[ , sigma.col ], xout = age[ i ], rule = 1 )$y
                 ( ( value[ i ] / m ) ** l - 1 ) / ( l * s )
             }
         )
@@ -152,43 +160,55 @@ data.sprech$year <- year( data.sprech$EDAT )
 
 sozdem <- get.data( ldb, "D00177", remove.D.name = T )
 
+nrow( data.sprech )
+
 data.sprech <- 
     merge(
         data.sprech, 
         sozdem,
         by.x = c( "SIC", "year" ),
-        by.y = c( "SIC", "JAHR" ) )
+        by.y = c( "SIC", "JAHR" ),
+        all.x = F,
+        all.y = F )
 
-summary( mm <- lm( sprech1_sds ~ sex/SCORE_FAM , data = data.sprech ) )
-summary( mm <- lm( sprech2_sds ~ sex/SCORE_FAM , data = data.sprech ) )
-summary( mm <- lm( sprech3_sds ~ sex/SCORE_FAM , data = data.sprech ) )
-summary( mm <- lm( sprech4_sds ~ sex/SCORE_FAM , data = data.sprech ) )
+## only rows with SCORE_FAM
+data.sprech <- data.sprech[ !is.na( data.sprech$SCORE_FAM ), ]
+
+nrow( data.sprech )
 
 ggplot( data.sprech,
     aes( age, sprech1_sds, col = sex ) ) +
-    geom_point( ) +
-    geom_smooth( )
+    geom_point( alpha = .3, na.rm = T ) +
+    geom_smooth( method = "gam", na.rm = T ) + 
+    facet_grid( sex ~ . ) +
+    scale_color_manual( values =  c( "male" = "midnightblue", "female" = "deeppink4" ) )
 
 ggsave( "sprech1_sds.png" )
 
 ggplot( data.sprech,
     aes( age, sprech2_sds, col = sex ) ) +
-    geom_point( ) +
-    geom_smooth( )
+    geom_point( alpha = .3, na.rm = T ) +
+    geom_smooth( method = "gam", na.rm = T ) + 
+    facet_grid( sex ~ . ) +
+    scale_color_manual( values =  c( "male" = "midnightblue", "female" = "deeppink4" ) )
 
 ggsave( "sprech2_sds.png" )
 
 ggplot( data.sprech,
     aes( age, sprech3_sds, col = sex ) ) +
-    geom_point( ) +
-    geom_smooth( )
+    geom_point( alpha = .3, na.rm = T ) +
+    geom_smooth( method = "gam", na.rm = T ) + 
+    facet_grid( sex ~ . ) +
+    scale_color_manual( values =  c( "male" = "midnightblue", "female" = "deeppink4" ) )
 
 ggsave( "sprech3_sds.png" )
 
 ggplot( data.sprech,
     aes( age, sprech4_sds, col = sex ) ) +
-    geom_point( ) +
-    geom_smooth( )
+    geom_point( alpha = .3, na.rm = T ) +
+    geom_smooth( method = "gam", na.rm = T ) + 
+    facet_grid( sex ~ . ) +
+    scale_color_manual( values =  c( "male" = "midnightblue", "female" = "deeppink4" ) )
 
 ggsave( "sprech4_sds.png" )
 

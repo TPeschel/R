@@ -14,16 +14,12 @@ library( svglite )
 ## connection to data base
 source( "~/connection/connection.r" )
 
-## little helper
-## just a stack for storing working directory
-source( "~/LIFE/myPostGraduates/ThomasBerger/r/TP/wd.stack.R" )
-
 ## day of computation
-#date.today <- gsub( x = Sys.Date( ), pattern = "-", replacement = "" )
+#date.today <- gsub( x = Sys.Date( ), pattern = "-1perFam", replacement = "" )
 date.today <- "20170328"
 #date.today <- 20202020
 ## push the current working directory on the stack
-push( )
+#push( )
 
 ## set the new working directory to ~/LIFE/myPostGraduates/ThomasBerger/r/TP/
 setwd( "~/LIFE/github-tpeschel/R/ThomasBerger/r/" )
@@ -42,4 +38,4 @@ source( "evaluation_part1_sprech_123bccg_4norm_distributed_with_gamlls.R" )
 ## SPRECH_F0_4
 source( "evaluation_part2_sprech_123bccg_4norm_distributed_with_gamlls.R" )
 
-pop( )
+#pop( )
