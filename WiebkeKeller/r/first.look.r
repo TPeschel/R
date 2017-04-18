@@ -24,4 +24,8 @@ table( focus$C_DISEASE_TX_ASTHMA )
 table( focus$FB_ALLERGY_BP1_F0043 )
 table( focus$C_DISEASE_TX_ASTHMA == 1 & focus$FB_ALLERGY_BP1_F0043 == 2 )
 
-focus[ focus$C_DISEASE_TX_ASTHMA == 1 & focus$FB_ALLERGY_BP1_F0043 == 2, c( "C_DISEASE_TX_SIC", "C_DISEASE_TX_SCI_GROUP", "C_DISEASE_TX_ASTHMA", "FB_ALLERGY_BP1_F0043" ) ]
+f.available <- focus[ !is.na( focus$C_DISEASE_TX_ASTHMA ) & !is.na( focus$FB_ALLERGY_BP1_F0043 ), ]
+
+f <- 
+    f.available[ f.available$C_DISEASE_TX_ASTHMA == 1 & f.available$FB_ALLERGY_BP1_F0043 == 2, c( "C_DISEASE_TX_SIC", "C_DISEASE_TX_SCI_GROUP", "C_DISEASE_TX_ASTHMA", "FB_ALLERGY_BP1_F0043" ) ]
+f
