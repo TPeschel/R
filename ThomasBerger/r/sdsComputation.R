@@ -34,7 +34,6 @@ data.sprech <- get.data.with.aliases( ldb, "T00865", withTabAlias = F )
 data.sprech <- add.persdat.age( persdat, data.sprech )
 data.sprech <- filter( data.sprech, age < 18 )
 
-
 sds.normal <-
     function(
         value, 

@@ -89,7 +89,6 @@ Reduce(
     lapply( 
         c( "pearson", "spearman" ),
         function( tp ) {
-
             Reduce( 
                 bind_rows, 
                 lapply( 

@@ -2,31 +2,32 @@ library(helpR)
 library(lubridate)
 library(ggplot2)
 
-tbls <-
-  read.all.xlsx.tables( "../../data/" )
+# tbls <-
+#   read.all.xlsx.tables( "../../data/" )
+# 
+# t.n <-
+#   all.xlsx.tables.names( tbls )
+# 
+# t.c.n <- 
+#   all.xlsx.tables.row.names( tbls )
+# 
+# t.c.n
+# 
+# t.c.n[8]
+# 
+# t.n[8]
+# 
+# d00149 <- get.tbl("D00149", all.tables=tbls)
 
-t.n <-
-  all.xlsx.tables.names( tbls )
+d00149 <- get.table.by.name( "D00149" )
 
-t.c.n <- 
-  all.xlsx.tables.row.names( tbls )
-
-t.c.n
-
-t.c.n[8]
-
-t.n[8]
-
-d00149 <- get.tbl("D00149", all.tables=tbls)
-
-table(d00149$E_SDQ_GES_SCORE)
-summary(d00149$E_SDQ_GES_SCORE)
+table( d00149$E_SDQ_GES_SCORE )
+summary( d00149$E_SDQ_GES_SCORE )
 
 ##Wie viele Kinder haben auffälliges Ergebnis (>17), bzw. grenzwertiges
 #Ergebnis(14-16)
-d00149$E_SDQ_GES_SCORE[d00149$E_SDQ_GES_SCORE > 17]
-d00149$E_SDQ_GES_SCORE[d00149$E_SDQ_GES_SCORE > 14 & 
-                   d00149$E_SDQ_GES_SCORE < 16]
+d00149$E_SDQ_GES_SCORE[ d00149$E_SDQ_GES_SCORE > 17]
+d00149$E_SDQ_GES_SCORE[ d00149$E_SDQ_GES_SCORE > 14 & d00149$E_SDQ_GES_SCORE < 16 ]
 
 
 d00149.14.16 <- d00149$E_SDQ_GES_SCORE[d00149$E_SDQ_GES_SCORE > 14 & 
@@ -36,7 +37,7 @@ d00149[d00149$E_SDQ_GES_SCORE > 17,]
 d00149.17 <- d00149[d00149$E_SDQ_GES_SCORE > 17,]
 
 ##Darstellung der Kinder, die auffälliges Ergebnis haben
-ggplot(d00149, aes(x=E_SDQ_GES_SCORE))+geom_bar()
+ggplot(d00149, aes(x=( E_SDQ_GES_SCORE)))+geom_bar()
 ggplot(d00149.17, aes(x = E_SDQ_GES_SCORE))+geom_bar()
 
 summary(d00149.17$E_SDQ_GES_SCORE)

@@ -156,3 +156,5 @@ ggpairs(daten[,c("CT_VALUE", "IGF1_VALUE", "AGE_D00040")])
 
 ggpairs(daten[,c("CT_VALUE", "AGE_D00040")])
 
+
+
